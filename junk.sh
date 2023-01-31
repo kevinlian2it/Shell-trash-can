@@ -1,5 +1,5 @@
 #!/bin/bash
-###################
+####################
 function Usage (){
     echo "Usage: junk.sh [-hlp] [list of files]"
     echo "  -h: Display help."
@@ -14,7 +14,7 @@ if [ ! -d ~/.junk ]; then
     mkdir ~/.junk
 fi 
 
-# Check if the script is called with no arguments
+# Check if there is no arguments
 if [ $# -eq 0 ]; then
   Usage
   exit 0
@@ -35,6 +35,8 @@ while getopts "hlp" option; do
 done
 
 # Check if more than one flag is specified
-if [ "$list" = true ] && [ "$purge" = true ]; then
-  handle_error "Too many options enabled."
+if [ "$list" = true ] && [ "$purge" = true ]; then      
+    echo "Too many options enabled."
+    Usage
+    exit 1;;
 fi
