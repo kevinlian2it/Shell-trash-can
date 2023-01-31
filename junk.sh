@@ -52,3 +52,16 @@ if [ "$list" = true ] || [ "$purge" = true ]; then ## when l or p exists
         err "Too many options enabled."
     fi
 fi
+
+# List junked files if -l flag is specified
+if [ "$list" = true ]; then
+    ls -lAF ~/.junk
+    exit 0 # success
+fi
+
+# Purge all files in the junk directory if -p flag is specified
+if [ "$purge" = true ]; then
+    rm -rf ~/.junk/* # delete everything in the root directory
+    exit 0 # success
+fi
+
