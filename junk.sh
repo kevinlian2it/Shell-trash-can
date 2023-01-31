@@ -40,3 +40,15 @@ if [ "$list" = true ] && [ "$purge" = true ]; then
     Usage
     exit 1;;
 fi
+
+# to get the arguement after hlp
+shift $((OPTIND -1))
+
+# Check the last situation, when files are specified along with the flag
+if [ "$list" = true ] || [ "$purge" = true ]; then ## when l or p exists
+    if [ $# -ne 0 ]; then # when the files exist
+        echo "Too many options enabled."
+        Usage
+        exit 1;;
+    fi
+fi
