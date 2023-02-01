@@ -1,5 +1,5 @@
 #!/bin/bash
-
+##### exit code
 readonly JUNK_DIR=~/.junk
 usage() {
 cat<< USAGE
@@ -19,8 +19,8 @@ fi
 
 flag=0
 #parse the input command
-while getopts "hlp" option; do
-	case $option in
+while getopts ":hlp" opt; do
+	case $opt in
 		h) help=true
 			((flag=flag+1))
 			;;
@@ -30,7 +30,7 @@ while getopts "hlp" option; do
 		p) purge=true
 			((flag=flag+1))
 			;; #Purge all files
-		\?) >&2 echo "Error: Unknown option -$OPTARG."
+		\?) >&2 echo "Error: Unknown option -${OPTARG}."
 			usage
 			exit 1
 			;;
@@ -87,4 +87,5 @@ if [ $# -gt 0 ]; then
 			>&2 echo "Warning: '$file' not found"
 		fi
 	done
+	exit 0
 fi
