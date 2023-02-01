@@ -61,6 +61,12 @@ if [ ! -d "$JUNK_DIR" ]; then
         mkdir "$JUNK_DIR"
 fi
 
+#performs -h function
+if [ "$help" = true ] ; then
+        usage
+        exit 0
+fi
+
 #performs -l function
 if [ "$list" = true ] ; then
 	ls -lAF "$JUNK_DIR"
