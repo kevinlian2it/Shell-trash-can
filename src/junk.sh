@@ -17,16 +17,20 @@ if [ $# -eq 0 ]; then
 	exit 0
 fi
 
+flag=0
 #parse the input command
 while getopts "hlp" option; do
 	case $option in
-		h) usage
-		exit 0;;
+		h) help=true
+			((flag=flag+1))
+			;;
 		l) list=true
+			((flag=flag+1))
 			;; #List junked files
 		p) purge=true
+			((flag=flag+1))
 			;; #Purge all files
-		\?) err "Error: Unknown option -$OPTARG."
+		\?) >&2 echo "Error: Unknown option -$OPTARG."
 			usage
 			exit 1
 			;;
@@ -34,8 +38,8 @@ while getopts "hlp" option; do
 done
 
 #Checks if more than one flag is specified
-if [ "$list" = true ] && [ "$purge" = true ] ; then
-	err "Error: Too many options enabled."
+if [ $flag -ge 2 ] ; then
+	>&2 echo "Error: Too many options enabled."
 	usage
 	exit 1
 fi
@@ -46,7 +50,7 @@ shift $((OPTIND -1))
 #check last situation when files are specified along with flag
 if [ "$list"=true ] || ["$purge"=true ] ; then
 	if [ $# -ne 0 ] ; then 
-		err "Error: Too many options enabled."
+		>&2 echo "Error: Too many options enabled."
 		usage
 		exit 1		
 	fi
