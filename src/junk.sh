@@ -85,7 +85,7 @@ if [ $# -gt 0 ]; then
 		if [ -e "$file" ] ; then
 			mv "$file" "$JUNK_DIR"
 		else
-			>&2 "Warning: '$file' not found"
+			>&2 echo "Warning: '$file' not found"
 		fi
 	done
 fi
