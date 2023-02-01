@@ -75,8 +75,7 @@ fi
 
 #performs -p function
 if [ "$purge" = true ] ; then
-	rm -r "$JUNK_DIR"/*
-	rm -r "$JUNK_DIR"/.*
+	rm -rf "$JUNK_DIR"/{*,.*}
 	exit 0
 fi
 
@@ -89,4 +88,3 @@ if [ $# -gt 0 ]; then
 		fi
 	done
 fi
-
