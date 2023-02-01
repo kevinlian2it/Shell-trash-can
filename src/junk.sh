@@ -48,7 +48,7 @@ fi
 shift $((OPTIND -1))
 
 #check last situation when files are specified along with flag
-if [ "$list"=true ] || ["$purge"=true ] ; then
+if [ $flag -gt 0 ] ; then
 	if [ $# -ne 0 ] ; then 
 		>&2 echo "Error: Too many options enabled."
 		usage
@@ -69,16 +69,17 @@ fi
 
 #performs -p function
 if [ "$purge" = true ] ; then
-	rm -rf "$JUNK_DIR"
+	rm -r "$JUNK_DIR"/*
+	rm -r "$JUNK_DIR"/.*
 	exit 0
 fi
 
 if [ $# -gt 0 ]; then
 	for file in "$@"; do
-		if [ -e "$file" ]; then
+		if [ -e "$file" ] ; then
 			mv "$file" "$JUNK_DIR"
 		else
-			err "Warning: '$file' not found"
+			>&2 "Warning: '$file' not found"
 		fi
 	done
 fi
