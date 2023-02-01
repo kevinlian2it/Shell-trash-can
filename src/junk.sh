@@ -1,18 +1,30 @@
 #!/bin/bash
 
+readonly JUNK_DIR = ~/.junk
+
+cat<< USAGE
+Usage: junk.sh [-hlp] [list of files]
+    -h: Display help.
+    -l: List junked files.
+    -p: Purge all files.
+    [list of files] with no other arguments to junk those files.
+USAGE
+
 #check directory exists or create one
-if [ ! -d ~/.junk]; then
-	mkdir ~/.junk
+if [ ! -d "$JUNK_DIR"]; then
+	mkdir "$JUNK_DIR"
 fi
 
 #parse the input command
 while getopts "hlp" option; do
 	case $option in
-		h) U
+		h) USAGE
 		exit 0;;
 		l) list = true;; #List junked files
 		p) purge = true;; #Purge all files
 		\?) err "Error: Unknown option -$OPTARG."
+			USAGE
+			exit 1;;
 	esac
 done
 
@@ -33,12 +45,12 @@ fi
 
 #performs -l function
 if [ "$list" = true]; then
-	ls -lAF ~/.junk
+	ls -lAF "$JUNK_DIR"
 	exit 0
 fi
 
 #performs -p function
 if [ "$purge" = true]; then
-	rm -rf ~/.junk/*
+	rm -rf "$JUNK_DIR"
 	exit 0
 fi
