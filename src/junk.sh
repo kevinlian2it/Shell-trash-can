@@ -2,9 +2,8 @@
 
 readonly JUNK_DIR=~/.junk
 usage() {
-file="~/cs3157/hw1/src/junk.sh" 
 cat<< USAGE
-Usage: $(basename "$file") [-hlp] [list of files]
+Usage: $(basename "~/cs3157/hw1/src/junk.sh") [-hlp] [list of files]
     -h: Display help.
     -l: List junked files.
     -p: Purge all files.
