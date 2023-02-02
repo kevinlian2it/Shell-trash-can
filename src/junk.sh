@@ -3,7 +3,7 @@
 readonly JUNK_DIR=~/.junk
 usage() {
 cat<< USAGE
-Usage: $(basename "~/cs3157/hw1/src/junk.sh") [-hlp] [list of files]
+Usage: $(basename "$0") [-hlp] [list of files]
     -h: Display help.
     -l: List junked files.
     -p: Purge all files.
@@ -18,17 +18,20 @@ if [ $# -eq 0 ]; then
 fi
 
 flag=0
+h_flag=0
+l_flag=0
+p_flag=0
 #parse the input command
 while getopts ":hlp" opt; do
 	case $opt in
 		h) help=true
-			((flag=flag+1))
+			((h_flag=1))
 			;;
 		l) list=true
-			((flag=flag+1))
+			((l_flag=1))
 			;; #List junked files
 		p) purge=true
-			((flag=flag+1))
+			((p_flag=1))
 			;; #Purge all files
 		\?) >&2 echo "Error: Unknown option -${OPTARG}."
 			usage
@@ -36,6 +39,8 @@ while getopts ":hlp" opt; do
 			;;
 	esac
 done
+
+flag=$(($h_flag+$l_flag+$p_flag))
 
 #Checks if more than one flag is specified
 if [ $flag -ge 2 ] ; then
