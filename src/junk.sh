@@ -33,7 +33,7 @@ while getopts ":hlp" opt; do
 		p) purge=true
 			((p_flag=1))
 			;; #Purge all files
-		\?) >&2 echo "Error: Unknown option -${OPTARG}."
+		\?) >&2 echo "Error: Unknown option '-${OPTARG}'."
 			usage
 			exit 1
 			;;
