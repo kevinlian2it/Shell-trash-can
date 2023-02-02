@@ -1,5 +1,5 @@
 #!/bin/bash
-##### exit code
+########################################
 readonly JUNK_DIR=~/.junk
 usage() {
 cat<< END
