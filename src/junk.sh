@@ -14,7 +14,7 @@ USAGE
 #checks if there are no arguments
 if [ $# -eq 0 ]; then
 	usage
-	exit 0
+	exit 1
 fi
 
 flag=0
