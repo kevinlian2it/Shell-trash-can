@@ -1,68 +1,91 @@
 #!/bin/bash
-####################
-# two functions needed to repeat below
-
-Usage (){
-    echo "Usage: junk.sh [-hlp] [list of files]"
-    echo "  -h: Display help."
-    echo "  -l: List junked files."
-    echo "  -p: Purge all files."
-    echo "  [list of files] with no other arguments to junk those files."
-    # no needs to exit
+##### exit code
+readonly JUNK_DIR=~/.junk
+usage() {
+cat<< END
+Usage: $(basename "$0") [-hlp] [list of files]
+    -h: Display help.
+    -l: List junked files.
+    -p: Purge all files.
+    [list of files] with no other arguments to junk those files.
+END
 }
 
-err (){
-    echo "Error: $1"
-    Usage
-    exit 1 # exit 1 means error
-}
-
-#check directory exists or create one
-if [ ! -d ~/.junk ]; then
-    mkdir ~/.junk
-fi 
-
-# Check if there is no arguments
+#checks if there are no arguments
 if [ $# -eq 0 ]; then
-    Usage
-    exit 0
+	usage
+	exit 0
 fi
 
-# read the input command
-while getopts "hlp" option; do
-    case $option in
-      h) Usage # Display Help
-         exit 0;;
-      l) list=true;; # List junked files     
-      p) purge=true;; # Purge all files
-     \?) err "Error: Unknown option -$OPTARG."
-    esac
+flag=0
+#parse the input command
+while getopts ":hlp" opt; do
+	case $opt in
+		h) help=true
+			((flag=flag+1))
+			;;
+		l) list=true
+			((flag=flag+1))
+			;; #List junked files
+		p) purge=true
+			((flag=flag+1))
+			;; #Purge all files
+		\?) >&2 echo "Error: Unknown option -${OPTARG}."
+			usage
+			exit 1
+			;;
+	esac
 done
 
-# Check if more than one flag is specified
-if [ "$list" = true ] && [ "$purge" = true ]; then      
-    err "Too many options enabled."
+#Checks if more than one flag is specified
+if [ $flag -ge 2 ] ; then
+	>&2 echo "Error: Too many options enabled."
+	usage
+	exit 1
 fi
 
-# to get the arguement after hlp, moving to the next command
+#get argument after hlp
 shift $((OPTIND -1))
 
-# Check the last situation, when files are specified along with the flag
-if [ "$list" = true ] || [ "$purge" = true ]; then ## when l or p exists
-    if [ $# -ne 0 ]; then # while the file exists as well
-        err "Too many options enabled."
-    fi
+#check last situation when files are specified along with flag
+if [ $flag -gt 0 ] ; then
+	if [ $# -ne 0 ] ; then 
+		>&2 echo "Error: Too many options enabled."
+		usage
+		exit 1		
+	fi
 fi
 
-# List junked files if -l flag is specified
-if [ "$list" = true ]; then
-    ls -lAF ~/.junk # Combine these arguments for a long format list of all files with types
-    exit 0 # success
+#checks if directory exists or create one
+if [ ! -d "$JUNK_DIR" ]; then
+        mkdir "$JUNK_DIR"
 fi
 
-# Purge all files in the junk directory if -p flag is specified
-if [ "$purge" = true ]; then
-    rm -rf ~/.junk/* # delete everything in the root directory
-    exit 0 # success
+#performs -h function
+if [ "$help" = true ] ; then
+        usage
+        exit 0
 fi
 
+#performs -l function
+if [ "$list" = true ] ; then
+	ls -lAF "$JUNK_DIR"
+	exit 0
+fi
+
+#performs -p function
+if [ "$purge" = true ] ; then
+	rm -rf "$JUNK_DIR"/{*,.*}
+	exit 0
+fi
+
+if [ $# -gt 0 ]; then
+	for file in "$@"; do
+		if [ -e "$file" ] ; then
+			mv "$file" "$JUNK_DIR"
+		else
+			>&2 echo "Warning: '$file' not found"
+		fi
+	done
+	exit 0
+fi
